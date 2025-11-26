@@ -49,16 +49,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   async function loadProfile(userId: string) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
 
-    if (data) {
-      setProfile(data);
+      if (data) {
+        setProfile(data);
+      } else if (!error) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+
+        const newProfile = {
+          id: userId,
+          email: authUser?.email || '',
+          display_name: authUser?.email?.split('@')[0] || 'User',
+          is_admin: false
+        };
+
+        const { data: created } = await supabase
+          .from('profiles')
+          .insert([newProfile])
+          .select()
+          .maybeSingle();
+
+        if (created) {
+          setProfile(created);
+        }
+      }
+    } catch (err) {
+      console.error('Profile loading error:', err);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   async function signOut() {
