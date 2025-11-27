@@ -247,6 +247,7 @@ export default function FeedPage() {
       case 'submission': return <Target className="w-4 h-4" />;
       case 'buffalo_call': return <Beer className="w-4 h-4" />;
       case 'buffalo_request': return <Beer className="w-4 h-4" />;
+      case 'buffalo_accepted': return <Beer className="w-4 h-4" />;
       case 'result': return <Trophy className="w-4 h-4" />;
       default: return <Zap className="w-4 h-4" />;
     }
@@ -344,6 +345,7 @@ export default function FeedPage() {
                     <div className="flex items-start gap-3">
                       <div className={`p-2 rounded-lg ${
                         item.event_type === 'buffalo_request' ? 'bg-amber-600' :
+                        item.event_type === 'buffalo_accepted' ? 'bg-green-600' :
                         item.event_type === 'buffalo_call' ? 'bg-amber-600' :
                         item.event_type === 'submission' ? 'bg-blue-600' :
                         item.event_type === 'result' ? 'bg-green-600' :

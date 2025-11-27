@@ -45,6 +45,25 @@ export default function PlayerProfilePage() {
       router.push('/auth');
     } else if (user && playerId) {
       loadPlayerData();
+
+      const channel = supabase
+        .channel('player-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'buffalo_balances',
+          },
+          () => {
+            loadPlayerData();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user, authLoading, playerId, router]);
 

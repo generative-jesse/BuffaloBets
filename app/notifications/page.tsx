@@ -114,11 +114,11 @@ export default function NotificationsPage() {
       }
 
       await supabase.from('feed_events').insert({
-        event_type: 'buffalo_call',
+        event_type: 'buffalo_accepted',
         user_id: request.requester_id,
         related_user_id: user.id,
         year: currentYear,
-        title: `${request.requester.display_name} added a buffalo on ${profile.display_name}`,
+        title: `${profile.display_name} accepted a buffalo from ${request.requester.display_name}`,
         description: request.note || 'Buffalo accepted!',
       });
 
