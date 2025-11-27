@@ -2,17 +2,61 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, FileText, Newspaper, TrendingUp, User } from 'lucide-react';
+import { Home, FileText, Newspaper, TrendingUp, User, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/lib/auth-context';
+import { supabase } from '@/lib/supabase';
+import { useEffect, useState } from 'react';
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      loadNotificationCount();
+
+      const channel = supabase
+        .channel('notifications-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'buffalo_requests',
+            filter: `recipient_id=eq.${user.id}`,
+          },
+          () => {
+            loadNotificationCount();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [user]);
+
+  async function loadNotificationCount() {
+    if (!user) return;
+
+    const { data } = await supabase
+      .from('buffalo_requests')
+      .select('id', { count: 'exact', head: true })
+      .eq('recipient_id', user.id)
+      .eq('status', 'pending');
+
+    setNotificationCount(data?.length || 0);
+  }
 
   const navItems = [
     { href: '/', icon: Home, label: 'Home' },
     { href: '/submit', icon: FileText, label: 'Submit' },
     { href: '/buffalo-board', icon: TrendingUp, label: 'Buffalo' },
     { href: '/feed', icon: Newspaper, label: 'Feed' },
+    { href: '/notifications', icon: Bell, label: 'Alerts', badge: notificationCount },
     { href: '/profile', icon: User, label: 'Profile' },
   ];
 
@@ -37,10 +81,17 @@ export function BottomNav() {
               {isActive && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-amber-500 rounded-b-full animate-scale-in" />
               )}
-              <Icon className={cn(
-                'w-5 h-5 mb-1 transition-transform',
-                isActive && 'scale-110'
-              )} />
+              <div className="relative">
+                <Icon className={cn(
+                  'w-5 h-5 mb-1 transition-transform',
+                  isActive && 'scale-110'
+                )} />
+                {item.badge && item.badge > 0 && (
+                  <div className="absolute -top-1 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </div>
+                )}
+              </div>
               <span className="text-xs font-medium">{item.label}</span>
             </Link>
           );

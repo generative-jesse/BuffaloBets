@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Profile, BuffaloBalance } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -48,11 +49,7 @@ export default function BuffaloBoardPage() {
   }
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const getBuffalosBetween = (callerId: string, recipientId: string) => {
@@ -137,7 +134,15 @@ export default function BuffaloBoardPage() {
                         </div>
                         <div>
                           <CardTitle className="text-lg">
-                            {player.display_name}
+                            <span
+                              className="cursor-pointer hover:text-amber-500 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/player/${player.id}`);
+                              }}
+                            >
+                              {player.display_name}
+                            </span>
                             {isCurrentUser && (
                               <span className="text-sm text-amber-500 ml-2">(You)</span>
                             )}

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Score } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { User, Trophy, LogOut, Crown } from 'lucide-react';
@@ -55,11 +56,7 @@ export default function ProfilePage() {
   }
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!profile) return null;

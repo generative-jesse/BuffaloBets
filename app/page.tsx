@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Profile, Submission, BuffaloBalance, Score, FeedEvent } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -83,14 +84,7 @@ export default function HomePage() {
   }
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <div className="text-center">
-          <Beer className="w-12 h-12 text-amber-500 animate-pulse mx-auto mb-4" />
-          <p className="text-zinc-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!profile) return null;
@@ -135,7 +129,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-zinc-950 pb-20">
-      <div className="gradient-animate text-white p-6 pb-8">
+      <div className="gradient-animate animated-mesh text-white p-6 pb-8 relative overflow-hidden">
         <div className="flex items-center justify-between mb-4 animate-fade-in">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">

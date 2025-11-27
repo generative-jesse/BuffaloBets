@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Score, Profile } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { History, Trophy } from 'lucide-react';
@@ -64,11 +65,7 @@ export default function HistoryPage() {
   }
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const getRankColor = (rank: number) => {
@@ -132,7 +129,12 @@ export default function HistoryPage() {
                       <div className="flex items-center gap-3">
                         <span className="text-3xl">{getRankIcon(score.final_rank)}</span>
                         <div>
-                          <p className="font-bold text-lg">{score.profile.display_name}</p>
+                          <p
+                            className="font-bold text-lg cursor-pointer hover:text-amber-500 transition-colors"
+                            onClick={() => router.push(`/player/${score.user_id}`)}
+                          >
+                            {score.profile.display_name}
+                          </p>
                           <p className="text-sm text-zinc-400">
                             {score.final_rank === 1 && 'Champion'}
                             {score.final_rank === 2 && 'Runner-up'}

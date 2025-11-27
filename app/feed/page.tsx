@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, BuffaloCall, Profile, FeedEvent } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -221,11 +222,7 @@ export default function FeedPage() {
   };
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const allActivity = [
@@ -269,7 +266,19 @@ export default function FeedPage() {
                       </div>
                       <div className="flex-1">
                         <p className="font-medium">
-                          {item.caller.display_name} called buffalo on {item.recipient.display_name}
+                          <span
+                            className="cursor-pointer hover:text-amber-500 transition-colors"
+                            onClick={() => router.push(`/player/${item.caller_id}`)}
+                          >
+                            {item.caller.display_name}
+                          </span>{' '}
+                          called buffalo on{' '}
+                          <span
+                            className="cursor-pointer hover:text-amber-500 transition-colors"
+                            onClick={() => router.push(`/player/${item.recipient_id}`)}
+                          >
+                            {item.recipient.display_name}
+                          </span>
                         </p>
                         <p className="text-sm text-zinc-400">
                           {new Date(item.called_at).toLocaleString()}

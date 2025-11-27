@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import { supabase, Profile, Submission } from '@/lib/supabase';
 import { calculateScore, rankPlayers, calculateBuffaloBalances } from '@/lib/scoring';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -144,11 +145,7 @@ export default function AdminPage() {
   }
 
   if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const usersWithSubmissions = allProfiles.filter(p =>
