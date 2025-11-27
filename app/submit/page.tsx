@@ -5,11 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Submission } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Music, Mic2 } from 'lucide-react';
+import { Music, Mic2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SubmitPage() {
@@ -82,28 +83,30 @@ export default function SubmitPage() {
     setSaving(false);
   }
 
-  if (authLoading || loading) {
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Music className="w-8 h-8 text-amber-500 animate-pulse" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-24">
-      <div className="bg-gradient-to-br from-amber-600 to-amber-800 text-white p-6">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-white hover:bg-white/20 mb-4"
-          onClick={() => router.push('/')}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
-        <h1 className="text-3xl font-bold mb-2">Submit Predictions</h1>
-        <p className="text-amber-100">Predict your {currentYear} Spotify Wrapped</p>
+    <div className="min-h-screen bg-zinc-950 pb-16">
+      <div className="bg-gradient-to-br from-amber-600 to-amber-700 border-b border-zinc-800 px-6 py-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+            <Music className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Submit Predictions</h1>
+            <p className="text-sm mt-0.5 text-amber-100">Predict your {currentYear} Spotify Wrapped</p>
+          </div>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="p-4 space-y-6">

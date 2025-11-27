@@ -92,3 +92,14 @@ export type FeedEvent = {
   metadata: Record<string, any>;
   created_at: string;
 };
+
+export type BuffaloRequest = {
+  id: string;
+  requester_id: string;
+  recipient_id: string;
+  year: number;
+  note: string | null;
+  status: 'pending' | 'accepted' | 'declined';
+  created_at: string;
+  responded_at: string | null;
+};

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { supabase, Score, Profile } from '@/lib/supabase';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { History, Trophy } from 'lucide-react';
@@ -63,10 +64,14 @@ export default function HistoryPage() {
     }
   }
 
-  if (authLoading || loading) {
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Trophy className="w-8 h-8 text-amber-500 animate-pulse" />
       </div>
     );
   }
@@ -86,13 +91,15 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-24">
-      <div className="bg-gradient-to-br from-amber-600 to-amber-800 text-white p-6">
+    <div className="min-h-screen bg-zinc-950 pb-16">
+      <div className="bg-gradient-to-br from-amber-600 to-amber-700 border-b border-zinc-800 px-6 py-5">
         <div className="flex items-center gap-3 mb-4">
-          <History className="w-8 h-8" />
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+            <History className="w-6 h-6 text-white" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold">History</h1>
-            <p className="text-amber-100">Past competition results</p>
+            <h1 className="text-2xl font-bold text-white tracking-tight">History</h1>
+            <p className="text-sm mt-0.5 text-amber-100">Past competition results</p>
           </div>
         </div>
 
@@ -132,7 +139,12 @@ export default function HistoryPage() {
                       <div className="flex items-center gap-3">
                         <span className="text-3xl">{getRankIcon(score.final_rank)}</span>
                         <div>
-                          <p className="font-bold text-lg">{score.profile.display_name}</p>
+                          <p
+                            className="font-bold text-lg cursor-pointer hover:text-amber-500 transition-colors"
+                            onClick={() => router.push(`/player/${score.user_id}`)}
+                          >
+                            {score.profile.display_name}
+                          </p>
                           <p className="text-sm text-zinc-400">
                             {score.final_rank === 1 && 'Champion'}
                             {score.final_rank === 2 && 'Runner-up'}

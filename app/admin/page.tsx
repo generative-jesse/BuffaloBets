@@ -6,11 +6,12 @@ import { useAuth } from '@/lib/auth-context';
 import { supabase, Profile, Submission } from '@/lib/supabase';
 import { calculateScore, rankPlayers, calculateBuffaloBalances } from '@/lib/scoring';
 import { BottomNav } from '@/components/bottom-nav';
+import { LoadingScreen } from '@/components/loading-screen';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Shield, CheckCircle } from 'lucide-react';
+import { Shield, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function AdminPage() {
@@ -143,10 +144,14 @@ export default function AdminPage() {
     toast.success('All scores calculated and buffalos awarded!');
   }
 
-  if (authLoading || loading) {
+  if (authLoading) {
+    return <LoadingScreen />;
+  }
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-zinc-950">
-        <p className="text-zinc-400">Loading...</p>
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+        <Shield className="w-8 h-8 text-purple-500 animate-pulse" />
       </div>
     );
   }
@@ -156,22 +161,15 @@ export default function AdminPage() {
   );
 
   return (
-    <div className="min-h-screen bg-zinc-950 pb-24">
-      <div className="bg-gradient-to-br from-purple-600 to-purple-800 text-white p-6">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-white hover:bg-white/20 mb-4"
-          onClick={() => router.push('/')}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </Button>
+    <div className="min-h-screen bg-zinc-950 pb-16">
+      <div className="bg-gradient-to-br from-purple-600 to-purple-700 border-b border-zinc-800 px-6 py-5">
         <div className="flex items-center gap-3">
-          <Shield className="w-8 h-8" />
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+            <Shield className="w-6 h-6 text-white" />
+          </div>
           <div>
-            <h1 className="text-3xl font-bold">Admin Panel</h1>
-            <p className="text-purple-100">Enter actual Spotify results</p>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Admin Panel</h1>
+            <p className="text-sm mt-0.5 text-purple-100">Enter actual Spotify results</p>
           </div>
         </div>
       </div>
