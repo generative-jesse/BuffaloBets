@@ -65,7 +65,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           id: userId,
           email: authUser?.email || '',
           display_name: authUser?.email?.split('@')[0] || 'User',
-          is_admin: false
+          is_admin: false,
+          created_at: new Date().toISOString(),
+          profile_photo_url: null,
+          bio: null,
+          spotify_playlist_url: null
         };
 
         const { data: created } = await supabase
@@ -76,10 +80,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (created) {
           setProfile(created);
+        } else {
+          setProfile(newProfile as Profile);
         }
+      } else if (error?.code === 'PGRST116') {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        const tempProfile = {
+          id: userId,
+          email: authUser?.email || '',
+          display_name: authUser?.email?.split('@')[0] || 'User',
+          is_admin: false,
+          created_at: new Date().toISOString(),
+          profile_photo_url: null,
+          bio: null,
+          spotify_playlist_url: null
+        };
+        setProfile(tempProfile as Profile);
       }
     } catch (err) {
       console.error('Profile loading error:', err);
+      const { data: { user: authUser } } = await supabase.auth.getUser();
+      const tempProfile = {
+        id: userId,
+        email: authUser?.email || '',
+        display_name: authUser?.email?.split('@')[0] || 'User',
+        is_admin: false,
+        created_at: new Date().toISOString(),
+        profile_photo_url: null,
+        bio: null,
+        spotify_playlist_url: null
+      };
+      setProfile(tempProfile as Profile);
     } finally {
       setLoading(false);
     }
