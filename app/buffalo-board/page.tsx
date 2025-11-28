@@ -152,30 +152,28 @@ export default function BuffaloBoardPage() {
                         <div className="bg-amber-600 p-3 rounded-full">
                           <Beer className="w-5 h-5 text-white" />
                         </div>
-                      </div>
-                      <div className="text-center">
-                        <CardTitle className="text-lg mb-2">
-                          <span
-                            className="cursor-pointer hover:text-amber-500 transition-colors"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              router.push(`/player/${player.id}`);
-                            }}
-                          >
-                            {player.display_name}
-                          </span>
-                          {isCurrentUser && (
-                            <span className="text-sm text-amber-500 ml-2">(You)</span>
-                          )}
-                        </CardTitle>
-                        <div className="flex justify-center gap-6">
-                          <div>
-                            <p className="text-2xl font-bold text-green-400">{totals.canCall}</p>
-                            <p className="text-xs text-zinc-500 mt-0.5">Can Call</p>
-                          </div>
-                          <div>
-                            <p className="text-2xl font-bold text-red-400">{totals.owes}</p>
-                            <p className="text-xs text-zinc-500 mt-0.5">Owes</p>
+                        <div>
+                          <CardTitle className="text-lg">
+                            <span
+                              className="cursor-pointer hover:text-amber-500 transition-colors"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/player/${player.id}`);
+                              }}
+                            >
+                              {player.display_name}
+                            </span>
+                            {isCurrentUser && (
+                              <span className="text-sm text-amber-500 ml-2">(You)</span>
+                            )}
+                          </CardTitle>
+                          <div className="flex gap-4 mt-1">
+                            <p className="text-sm text-green-400">
+                              {totals.canCall} can call
+                            </p>
+                            <p className="text-sm text-red-400">
+                              {totals.owes} owes
+                            </p>
                           </div>
                         </div>
                       </div>
