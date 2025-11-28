@@ -145,10 +145,10 @@ export default function BuffaloBoardPage() {
                 >
                   <CardHeader className="pb-3">
                     <div
-                      className="flex items-center justify-between cursor-pointer"
+                      className="cursor-pointer"
                       onClick={() => setSelectedPlayer(isExpanded ? null : player.id)}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center justify-center mb-3">
                         <div className="bg-amber-600 p-3 rounded-full">
                           <Beer className="w-5 h-5 text-white" />
                         </div>
@@ -177,9 +177,11 @@ export default function BuffaloBoardPage() {
                           </div>
                         </div>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        {isExpanded ? '−' : '+'}
-                      </Button>
+                      <div className="flex justify-center mt-3">
+                        <Button variant="ghost" size="sm" className="text-zinc-400">
+                          {isExpanded ? 'Show Less' : 'Show Details'}
+                        </Button>
+                      </div>
                     </div>
                   </CardHeader>
 
@@ -190,23 +192,25 @@ export default function BuffaloBoardPage() {
                         .map(balance => (
                           <div
                             key={balance.id}
-                            className="flex items-center justify-between p-3 bg-green-600/10 border border-green-600/30 rounded-lg"
+                            className="p-3 bg-green-600/10 border border-green-600/30 rounded-lg"
                           >
-                            <div>
-                              <p className="font-medium">→ {balance.recipient.display_name}</p>
-                              <p className="text-sm text-zinc-400">
-                                Can call {balance.balance} buffalo{balance.balance !== 1 ? 's' : ''}
-                              </p>
+                            <div className="flex items-center justify-between">
+                              <div className="text-center flex-1">
+                                <p className="font-medium">→ {balance.recipient.display_name}</p>
+                                <p className="text-sm text-zinc-400">
+                                  Can call {balance.balance} buffalo{balance.balance !== 1 ? 's' : ''}
+                                </p>
+                              </div>
+                              {isCurrentUser && (
+                                <Button
+                                  size="sm"
+                                  className="bg-amber-600 hover:bg-amber-700 button-press ml-3"
+                                  onClick={() => router.push(`/feed?call=${balance.recipient_id}`)}
+                                >
+                                  Call
+                                </Button>
+                              )}
                             </div>
-                            {isCurrentUser && (
-                              <Button
-                                size="sm"
-                                className="bg-amber-600 hover:bg-amber-700 button-press"
-                                onClick={() => router.push(`/feed?call=${balance.recipient_id}`)}
-                              >
-                                Call
-                              </Button>
-                            )}
                           </div>
                         ))}
 
@@ -215,14 +219,12 @@ export default function BuffaloBoardPage() {
                         .map(balance => (
                           <div
                             key={balance.id}
-                            className="flex items-center justify-between p-3 bg-red-600/10 border border-red-600/30 rounded-lg"
+                            className="p-3 bg-red-600/10 border border-red-600/30 rounded-lg text-center"
                           >
-                            <div>
-                              <p className="font-medium">← {balance.caller.display_name}</p>
-                              <p className="text-sm text-zinc-400">
-                                Owes {balance.balance} buffalo{balance.balance !== 1 ? 's' : ''}
-                              </p>
-                            </div>
+                            <p className="font-medium">← {balance.caller.display_name}</p>
+                            <p className="text-sm text-zinc-400">
+                              Owes {balance.balance} buffalo{balance.balance !== 1 ? 's' : ''}
+                            </p>
                           </div>
                         ))}
 
@@ -251,6 +253,23 @@ export default function BuffaloBoardPage() {
           </TabsContent>
 
           <TabsContent value="matrix" className="space-y-4">
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-3">
+              <div className="flex items-center justify-center gap-6 mb-4 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-green-600/20 border border-green-600 rounded" />
+                  <span className="text-zinc-400">You can call</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-red-600/20 border border-red-600 rounded" />
+                  <span className="text-zinc-400">You owe</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 bg-blue-600/20 border border-blue-600 rounded" />
+                  <span className="text-zinc-400">Others</span>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-zinc-900 border border-zinc-800 rounded-lg p-4 overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -309,26 +328,6 @@ export default function BuffaloBoardPage() {
                 </tbody>
               </table>
             </div>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-sm">Legend</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-green-600/20 border border-green-600 rounded" />
-                  <p className="text-zinc-300">Buffalos you can call</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-red-600/20 border border-red-600 rounded" />
-                  <p className="text-zinc-300">Buffalos you owe</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-blue-600/20 border border-blue-600 rounded" />
-                  <p className="text-zinc-300">Other relationships</p>
-                </div>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>

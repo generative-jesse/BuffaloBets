@@ -146,6 +146,7 @@ export default function HomePage() {
             </h1>
             <p className="text-amber-100 mt-1 text-sm">Welcome back, {profile.display_name}!</p>
           </div>
+          <p className="text-amber-100 text-sm">Welcome back, {profile.display_name}!</p>
         </div>
 
         <div className="bg-black/20 backdrop-blur-sm rounded-xl p-5 border border-white/10 animate-scale-in">
