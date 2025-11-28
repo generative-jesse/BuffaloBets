@@ -135,7 +135,7 @@ export default function NotificationsPage() {
       }
 
       const { error: feedError } = await supabase.from('feed_events').insert({
-        event_type: 'buffalo_accepted',
+        event_type: 'buffalo_call',
         user_id: request.requester_id,
         related_user_id: user.id,
         year: currentYear,

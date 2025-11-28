@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beer, Camera, Upload, Clock, Target, Trophy, Zap, AlertCircle, Play, Newspaper } from 'lucide-react';
+import { Beer, Camera, Upload, Clock, Target, Trophy, Zap, AlertCircle, Play, Newspaper, Music } from 'lucide-react';
 import { toast } from 'sonner';
 import Image from 'next/image';
 
@@ -246,9 +246,9 @@ export default function FeedPage() {
     switch (type) {
       case 'submission': return <Target className="w-4 h-4" />;
       case 'buffalo_call': return <Beer className="w-4 h-4" />;
-      case 'buffalo_request': return <Beer className="w-4 h-4" />;
-      case 'buffalo_accepted': return <Beer className="w-4 h-4" />;
       case 'result': return <Trophy className="w-4 h-4" />;
+      case 'ranking': return <Trophy className="w-4 h-4" />;
+      case 'playlist_share': return <Music className="w-4 h-4" />;
       default: return <Zap className="w-4 h-4" />;
     }
   };
@@ -344,11 +344,11 @@ export default function FeedPage() {
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       <div className={`p-2 rounded-lg ${
-                        item.event_type === 'buffalo_request' ? 'bg-amber-600' :
-                        item.event_type === 'buffalo_accepted' ? 'bg-green-600' :
                         item.event_type === 'buffalo_call' ? 'bg-amber-600' :
                         item.event_type === 'submission' ? 'bg-blue-600' :
                         item.event_type === 'result' ? 'bg-green-600' :
+                        item.event_type === 'ranking' ? 'bg-green-600' :
+                        item.event_type === 'playlist_share' ? 'bg-purple-600' :
                         'bg-zinc-600'
                       }`}>
                         {getEventIcon(item.event_type)}
